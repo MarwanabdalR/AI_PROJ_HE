@@ -24,8 +24,6 @@ def draw_board(board):
 
 
 
-# btn1 = Butt
-
 
 
 
@@ -460,6 +458,26 @@ def play_tic_tac_toe():
 
     draw_board_label = tk.Label(root, text=draw_board(board), font=("Helvetica", 12))
     draw_board_label.grid(row=4, column=0, columnspan=20)
+
+
+    # def easy():تتتتتتتتتتتتت
+
+    #     pass
+
+    # def medium():
+    #     pass
+
+    # def difficult():
+    #     pass
+
+    # btn1 = tk.Button(root, text="Easy", command=easy,width=15, height=2, font=( 50), fg="black", padx=5, pady=5)
+    # btn1.pack()
+    # btn2 = tk.Button(root, text="Medium", command=medium, width=15, height=2, font=(50), bg="black", fg="white", padx=5, pady=5)
+    # btn2.pack()
+    # btn3 = tk.Button(root, text="Defficult", command=difficult, width=15, height=2, font=( 50), bg="black", fg="white", padx=5, pady=5)
+    # btn3.pack()
+
+
 
     root.mainloop()
 
