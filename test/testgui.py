@@ -2,19 +2,6 @@ import tkinter as tk
 from tkinter import messagebox
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 import random
 
 def ai_move():
@@ -59,22 +46,6 @@ def ai_move():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Game constants
 BOARD_SIZE = 4
 EMPTY_CELL = ""
@@ -100,11 +71,6 @@ for i in range(BOARD_SIZE):
         cell.grid(row=i, column=j)
         cell["command"] = lambda row=i, col=j: click_cell(row, col)
         cells.append(cell)
-
-
-
-
-
 
 
 

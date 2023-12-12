@@ -18,6 +18,74 @@ def draw_board(board):
 
     return f"{frame1}\n\n{frame2}\n\n{frame3}\n\n{frame4}"
 
+
+
+
+
+
+
+# btn1 = Butt
+
+
+
+
+
+
+
+
+
+
+# def easy():
+
+#     pass
+
+# def medium():
+#     pass
+
+# def difficult():
+#     pass
+
+
+
+
+
+# root = tk()
+# root.geometry("850x500")
+# root.title("Tic Tac Toe 4*4*4")
+# btn1 = Button(root, text="Easy", command=easy,width=15, height=2, font=( 50), fg="black", padx=5, pady=5)
+# btn1.pack()
+# btn2 = Button(root, text="Medium", command=medium, width=15, height=2, font=(50), bg="black", fg="white", padx=5, pady=5)
+# btn2.pack()
+# btn3 = Button(root, text="Defficult", command=difficult, width=15, height=2, font=( 50), bg="black", fg="white", padx=5, pady=5)
+# btn3.pack()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def swap_player_turn(player_turn):
     if player_turn == 'X':
         return 'O'
@@ -205,28 +273,12 @@ def ai_move(board, goal, player_turn):
         if check_if_player_could_win(board, player_turn) == False:
             follow_goal(board, goal, player_turn)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def choose_random_goal(list_of_goals):
+    """Return a random goal, and delete the goal from list of goals"""
+    num = rnd.randrange(0, len(list_of_goals))
+    goal = list_of_goals[num]
+    list_of_goals.pop(num)
+    return goal
 
 def create_goals(board):
     """This function returns a random goal for the ai"""
