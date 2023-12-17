@@ -43,11 +43,8 @@ def ai_move():
 
 
 
-
-
-
 # Game constants
-BOARD_SIZE = 4
+BOARD_SIZE = 16
 EMPTY_CELL = ""
 PLAYER_X = "X"
 PLAYER_O = "O"
@@ -67,14 +64,10 @@ board_frame.pack()
 
 for i in range(BOARD_SIZE):
     for j in range(BOARD_SIZE):
-        cell = tk.Button(board_frame, text=EMPTY_CELL, font=("Helvetica", 20), width=5, height=2)
+        cell = tk.Button(board_frame, text=EMPTY_CELL, font=("Helvetica", 10), width=5, height=2)
         cell.grid(row=i, column=j)
         cell["command"] = lambda row=i, col=j: click_cell(row, col)
         cells.append(cell)
-
-
-
-
 
 
 
@@ -100,15 +93,6 @@ def click_cell(row, col):
         if not game_over and all(cell["text"] != EMPTY_CELL for cell in cells):
             messagebox.showinfo("Game Over", "It's a tie!")
             game_over = True
-
-
-
-
-
-
-
-
-
 
 
 # Function to check for winner

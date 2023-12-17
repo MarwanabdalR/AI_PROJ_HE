@@ -118,3 +118,6 @@ def main():
         print("\nO wins!")
     else:
         print("\n It's")
+
+main()
+find_best_move()
