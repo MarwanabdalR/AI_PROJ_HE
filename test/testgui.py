@@ -44,7 +44,7 @@ def ai_move():
 
 
 # Game constants
-BOARD_SIZE = 16
+BOARD_SIZE = 4
 EMPTY_CELL = ""
 PLAYER_X = "X"
 PLAYER_O = "O"
