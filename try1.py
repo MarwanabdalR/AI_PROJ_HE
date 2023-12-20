@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import math
 import time
+import random
 
 
 class Board:
@@ -74,6 +75,16 @@ class Board:
             for row in range(4):
                 if all(self.board[l][row][col] == player for l in range(4)):
                     return True
+        
+        # Check columns between layers
+        for col in range(4):
+                if all(self.board[i][i][col] == player for i in range(4)):
+                    return True 
+        
+        # check rows between layers 
+        for row in range(4):
+                if all(self.board[i][row][i] == player for i in range(4)):
+                    return True               
 
         # Check diagonals between layers
         if all(self.board[i][i][i] == player for i in range(4)) or all(
@@ -111,107 +122,48 @@ class Board:
                 for column in range(4):
                     self.board[layer][row][column] = ''
 
-
-
-
-
-
-    def symmetry_evaluation(self):
-            x_wins = sum(self.is_win('x') for layer in self.board)
-            o_wins = sum(self.is_win('O') for layer in self.board)
-            empty_spaces = sum(row.count('') for layer in self.board for row in layer)
-
-            # Customize the weights as needed based on your strategy
-            evaluation = 50 * (x_wins - o_wins) + 10 * empty_spaces
-            if self.AI_player == 'x':
-                evaluation += 100 * x_wins
-            elif self.AI_player == 'O':
-                evaluation += 100 * o_wins
-
-            return evaluation
-
-    def symmetry_check(self, moves):
-        # Check all possible symmetries of the current board state
-        symmetric_boards = []
-        for i in range(4):
-            # Rotate the board 90 degrees
-            rotated_board = [[self.board[l][3 - col][row] for l in range(4)] for row in range(4) for col in range(4)]
-            symmetric_boards.append(rotated_board)
-            # Flip the board horizontally
-            flipped_board = [[self.board[l][row][3 - col] for l in range(4)] for row in range(4) for col in range(4)]
-            symmetric_boards.append(flipped_board)
-
-        # Check if any symmetric board is in the list of moves
-        for sym_board in symmetric_boards:
-            if sym_board in moves:
-                return True
-
-        return False
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     def heuristic_evaluation(self):
         x_wins = sum(self.is_win('x') for layer in self.board)
         o_wins = sum(self.is_win('O') for layer in self.board)
         empty_spaces = sum(row.count('') for layer in self.board for row in layer)
 
-        # Customize the weights as needed based on your strategy
-        evaluation = 50 * (x_wins - o_wins) + 10 * empty_spaces
-        if self.AI_player == 'x':
-          evaluation += 100 * x_wins
-        elif self.AI_player == 'O':
-          evaluation += 100 * o_wins
+        # Adjust the weights to prioritize blocking the opponent
+        evaluation = 3 * (o_wins - x_wins) + empty_spaces
 
         return evaluation
 
-    # def minimax(self, depth, alpha, beta, maximizing_player):
-    #     if depth == 0 or self.is_win('x') or self.is_win('O') or self.is_full():
-    #         return self.heuristic_evaluation()
+    def minimax(self, depth, alpha, beta, maximizing_player):
+        if depth == 0 or self.is_win('x') or self.is_win('O') or self.is_full():
+            return self.heuristic_evaluation()
 
-    #     if maximizing_player:
-    #         max_eval = -math.inf
-    #         for layer in range(4):
-    #             for row in range(4):
-    #                 for col in range(4):
-    #                     if self.board[layer][row][col] == '':
-    #                         self.board[layer][row][col] = self.AI_player
-    #                         eval = self.minimax(depth - 1, alpha, beta, False)
-    #                         self.undo_move(layer, row, col)  # Undo the move
-    #                         max_eval = max(max_eval, eval)
-    #                         alpha = max(alpha, eval)
-    #                         if beta <= alpha:
-    #                             break
-    #         return max_eval
-    #     else:
-    #         min_eval = math.inf
-    #         for layer in range(4):
-    #             for row in range(4):
-    #                 for col in range(4):
-    #                     if self.board[layer][row][col] == '':
-    #                         self.board[layer][row][col] = self.players[0]
-    #                         eval = self.minimax(depth - 1, alpha, beta, True)
-    #                         self.undo_move(layer, row, col)  # Undo the move
-    #                         min_eval = min(min_eval, eval)
-    #                         beta = min(beta, eval)
-    #                         if beta <= alpha:
-    #                             break
-    #         return min_eval
+        if maximizing_player:
+            max_eval = -math.inf
+            for layer in range(4):
+                for row in range(4):
+                    for col in range(4):
+                        if self.board[layer][row][col] == '':
+                            self.board[layer][row][col] = self.AI_player
+                            eval = self.minimax(depth - 1, alpha, beta, False)
+                            self.undo_move(layer, row, col)  # Undo the move
+                            max_eval = max(max_eval, eval)
+                            alpha = max(alpha, eval)
+                            if beta <= alpha:
+                                break
+            return max_eval
+        else:
+            min_eval = math.inf
+            for layer in range(4):
+                for row in range(4):
+                    for col in range(4):
+                        if self.board[layer][row][col] == '':
+                            self.board[layer][row][col] = self.players[0]
+                            eval = self.minimax(depth - 1, alpha, beta, True)
+                            self.undo_move(layer, row, col)  # Undo the move
+                            min_eval = min(min_eval, eval)
+                            beta = min(beta, eval)
+                            if beta <= alpha:
+                                break
+            return min_eval
 
 
 class TicTacToeGUI:
@@ -261,19 +213,34 @@ class TicTacToeGUI:
         self.update_status()
 
     def get_best_move(self, max_time=5):
-        moves = []
+        best_move = None
+        best_eval = -math.inf
+        max_depth = 1
+        start_time = time.time()
 
-        for layer in range(4):
-            for row in range(4):
-                for column in range(4):
-                    if self.board.get_value(layer, row, column) == '':
-                        moves.append((layer, row, column))
+        while time.time() - start_time < max_time:
+            available_moves = [
+                (layer, row, col)
+                for layer in range(4)
+                for row in range(4)
+                for col in range(4)
+                if self.board.get_value(layer, row, col) == ''
+            ]
 
-        # Check for symmetry and eliminate symmetrically equivalent moves
-        moves = [move for move in moves if not self.board.symmetry_check([move])]
+            random.shuffle(available_moves)
 
-        # Evaluate remaining moves based on symmetry
-        best_move = max(moves, key=lambda move: self.board.symmetry_evaluation())
+            for move in available_moves:
+                layer, row, col = move
+                self.board.set_value(layer, row, col)
+                eval = self.board.minimax(max_depth, -math.inf, math.inf, False)
+                self.board.undo_move(layer, row, col)
+
+                if eval > best_eval:
+                    best_eval = eval
+                    best_move = move
+
+            max_depth += 1
+
         return best_move
 
     def make_move(self, layer, row, col):
@@ -301,10 +268,10 @@ class TicTacToeGUI:
                     self.check_game_over()
 
     def check_game_over(self):
-        if self.board.is_win('x') or self.board.is_win('O'):
+        if self.board.is_win('x') or self.board.is_win('O'):  # Fix 'o' to 'O'
             winner = 'Player X' if self.board.is_win('x') else 'Player O'
             messagebox.showinfo("Game Over", f"{winner} wins!")
-            self.board.reset_board()
+            self.start_game()
             self.update_status()
             return True
 

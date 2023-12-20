@@ -111,11 +111,6 @@ class Board:
                 for column in range(4):
                     self.board[layer][row][column] = ''
 
-
-
-
-
-
     def symmetry_evaluation(self):
             x_wins = sum(self.is_win('x') for layer in self.board)
             o_wins = sum(self.is_win('O') for layer in self.board)
@@ -147,22 +142,6 @@ class Board:
                 return True
 
         return False
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

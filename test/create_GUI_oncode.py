@@ -20,70 +20,6 @@ def draw_board(board):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def easy():
-
-#     pass
-
-# def medium():
-#     pass
-
-# def difficult():
-#     pass
-
-
-
-
-
-# root = tk()
-# root.geometry("850x500")
-# root.title("Tic Tac Toe 4*4*4")
-# btn1 = Button(root, text="Easy", command=easy,width=15, height=2, font=( 50), fg="black", padx=5, pady=5)
-# btn1.pack()
-# btn2 = Button(root, text="Medium", command=medium, width=15, height=2, font=(50), bg="black", fg="white", padx=5, pady=5)
-# btn2.pack()
-# btn3 = Button(root, text="Defficult", command=difficult, width=15, height=2, font=( 50), bg="black", fg="white", padx=5, pady=5)
-# btn3.pack()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def swap_player_turn(player_turn):
     if player_turn == 'X':
         return 'O'
@@ -95,181 +31,107 @@ def input_player_move(board, player_turn, move):
     board[b, r, c] = player_turn
 
 def check_for_wins(board):
-    # ... (same as before)
-    
-    """This function returns an 'X' if X has won or an 'O' if O has won."""
-    # Check Rows On each board:
-    for b in board:
-        for row in b:
-            countO = 0
-            countX = 0
-            for column in row:
-                if column == 'X':
-                    countX += 1
-                elif column == 'O':
-                    countO += 1
-            if countO == 4:
-                return 'O'
-            if countX == 4:
-                return 'X'
-    # Check Columns on each board:
-    for b in board:
-        for row in b.T:
-            countX = 0
-            countO = 0
-            for column in row:
-                if column == 'X':
-                    countX += 1
-                elif column == 'O':
-                    countO += 1
-            if countX == 4:
-                return 'X'
-            elif countO == 4:
-                return 'O'
-    # Check for diaganols on each board:
-    for b in board:
-        countX = 0
-        countO = 0
+    # Check Layers (horizontal, vertical, and diagonal within a single layer)
+    for b in range(4):
+        # Check horizontal and vertical layers
         for i in range(4):
-            if b[i, i] == 'X':
-                countX += 1
-            elif b[i, i] == 'O':
-                countO += 1  
-        if countX == 4:
-            return 'X'
-        elif countO == 4:
-            return 'O'
-        
-        countX = 0
-        countO = 0
-        for x, y in zip(range(3, -1, -1), range(4)):
-            if b[x, y] == 'X':
-                countX += 1
-            elif b[x, y] == 'O':
-                countO += 1
-        if countX == 4:
-            return 'X'
-        elif countO == 4:
-            return 'O'
-    # Check for line through board (3d row or column):
-    for x in range(4):
-        for y in range(4):
-            countX = 0
-            countO = 0
-            for b in board:
-                if b[x, y] == 'X':
-                    countX += 1
-                elif b[x, y] == 'O':
-                    countO += 1
-            if countX == 4:
-                return 'X'
-            elif countO == 4:
-                return 'O'
-    # Check for vertical through board daiaganols:
-    for c in range(4):
-        countO = 0
-        countX = 0
-        for r, b in zip(range(4), board):
-            if b[r, c] == 'X':
-                countX += 1
-            elif b[r, c] == 'O':
-                countO += 1
-        if countX == 4:
-            return 'X'
-        elif countO == 4:
-            return 'O'
-    for c in range(4):
-        countO = 0
-        countX = 0
-        for r, b in zip(range(3, -1, -1), board):
-            if b[r, c] == 'X':
-                countX += 1
-            elif b[r, c] == 'O':
-                countO += 1
-        if countX == 4:
-            return 'X'
-        elif countO == 4:
-            return 'O'
-    # Check for horizontal through board diaganols:
-    for r in range(4):
-        countX = 0
-        countO = 0
-        for c, b in zip(range(4), board):
-            if b[r, c] == 'X':
-                countX += 1
-            elif b[r, c] == 'O':
-                countO += 1
-        if countX == 4:
-            return 'X'
-        elif countO == 4:
-            return 'O'
-    for r in range(4):
-        countX = 0
-        countO = 0
-        for c, b in zip(range(3, -1, -1), board):
-            if b[r, c] == 'X':
-                countX += 1
-            elif b[r, c] == 'O':
-                countO += 1
-        if countX == 4:
-            return 'X'
-        elif countO == 4:
-            return 'O'
-    # Check for corner to corner diaganols
-    countX = 0
-    countO = 0
-    for r, c, b in zip(range(4), range(4), board):
-        if b[r, c] == 'X':
-            countX += 1
-        elif b[r, c] == 'O':
-            countO += 1
-    if countX == 4:
-        return 'X'
-    elif countO == 4:
-        return 'O'
-    countX = 0
-    countO = 0
-    for r, c, b in zip(range(4), range(3, -1, -1), board):
-        if b[r, c] == 'X':
-            countX += 1
-        elif b[r, c] == 'O':
-            countO += 1
-    if countX == 4:
-        return 'X'
-    elif countO == 4:
-        return 'O'
-    countX = 0
-    countO = 0
-    for r, c, b in zip(range(3, -1, -1), range(4), board):
-        if b[r, c] == 'X':
-            countX += 1
-        elif b[r, c] == 'O':
-            countO += 1
-    if countX == 4:
-        return 'X'
-    elif countO == 4:
-        return 'O'
-    countX = 0
-    countO = 0
-    for r, c, b in zip(range(3, -1, -1), range(3, -1, -1), board):
-        if b[r, c] == 'X':
-            countX += 1
-        elif b[r, c] == 'O':
-            countO += 1
-    if countX == 4:
-        return 'X'
-    elif countO == 4:
-        return 'O'
-    
+            # Horizontal layer
+            if all(mark == 'X' for mark in board[b, i, :]) or all(mark == 'O' for mark in board[b, i, :]):
+                return board[b, i, 0]
+            # Vertical layer
+            if all(mark == 'X' for mark in board[b, :, i]) or all(mark == 'O' for mark in board[b, :, i]):
+                return board[b, 0, i]
+        # Check diagonals within a single layer
+        if all(board[b, i, j] == 'X' for j in range(4) for i in range(4)) or all(board[b, i, j] == 'O' for j in range(4) for i in range(4)):
+            return board[b, 0, 0]
+        if all(board[b, i, 3 - i] == 'X' for i in range(4)) or all(board[b, i, 3 - i] == 'O' for i in range(4)):
+            return board[b, 0, 3]
+
+    # Check Rows (horizontal, vertical, and diagonal rows spanning across all layers)
+    for i in range(4):
+        # Horizontal row
+        if all(board[j, i, k] == 'X' for j in range(4) for k in range(4)) or all(board[j, i, k] == 'O' for j in range(4) for k in range(4)):
+            return board[0, i, 0]
+        # Vertical row
+        if all(board[j, k, i] == 'X' for j in range(4) for k in range(4)) or all(board[j, k, i] == 'O' for j in range(4) for k in range(4)):
+            return board[0, 0, i]
+        # Diagonal row
+        if all(board[j, j, i] == 'X' for j in range(4)) or all(board[j, j, i] == 'O' for j in range(4)):
+            return board[0, 0, i]
+        if all(board[j, 3 - j, i] == 'X' for j in range(4)) or all(board[j, 3 - j, i] == 'O' for j in range(4)):
+            return board[0, 3, i]
+
+    # Check Columns (horizontal, vertical, and diagonal columns spanning across all layers)
+    for i in range(4):
+        # Horizontal column
+        if all(board[i, j, k] == 'X' for j in range(4) for k in range(4)) or all(board[i, j, k] == 'O' for j in range(4) for k in range(4)):
+            return board[i, 0, 0]
+        # Vertical column
+        if all(board[j, i, k] == 'X' for j in range(4) for k in range(4)) or all(board[j, i, k] == 'O' for j in range(4) for k in range(4)):
+            return board[0, i, 0]
+        # Diagonal column
+        if all(board[j, k, i] == 'X' for j in range(4) for k in range(4)) or all(board[j, k, i] == 'O' for j in range(4) for k in range(4)):
+            return board[0, 0, i]
+
+    # Check Diagonals (connecting different layers)
+    for j in range(4):
+        # Diagonal connecting different layers
+        if all(board[i, j, i] == 'X' for i in range(4)) or all(board[i, j, i] == 'O' for i in range(4)):
+            return board[0, j, 0]
+        if all(board[i, j, 3 - i] == 'X' for i in range(4)) or all(board[i, j, 3 - i] == 'O' for i in range(4)):
+            return board[0, j, 3]
+
     return 'None'
 
 
 
-def ai_move(board, goal, player_turn):
-    """This function determines how to move for the AI"""
-    if check_if_ai_could_win(board, player_turn) == False:
-        if check_if_player_could_win(board, player_turn) == False:
-            follow_goal(board, goal, player_turn)
+def ai_move(board, player_turn):
+    best_score = float('-inf')
+    best_move = None
+    goals = create_goals(board)
+
+    for move in goals:
+        if check_if_goal_valid([move], board):
+            board_copy = board.copy()
+            input_player_move(board_copy, player_turn, move)
+            score = minimax(board_copy, 0, False)
+            if score > best_score:
+                best_score = score
+                best_move = move
+
+    if best_move is not None:
+        input_player_move(board, player_turn, best_move)
+
+
+def minimax(board, depth, is_maximizing):
+    if check_for_wins(board) == 'X':
+        return -1
+    elif check_for_wins(board) == 'O':
+        return 1
+    elif depth == 4 * 4 * 4:
+        return 0
+
+    if is_maximizing:
+        best_score = float('-inf')
+        for move in create_goals(board):
+            if check_if_goal_valid([move], board):
+                board_copy = board.copy()
+                input_player_move(board_copy, 'O', move)
+                score = minimax(board_copy, depth + 1, False)
+                best_score = max(score, best_score)
+        return best_score
+    else:
+        best_score = float('inf')
+        for move in create_goals(board):
+            if check_if_goal_valid([move], board):
+                board_copy = board.copy()
+                input_player_move(board_copy, 'X', move)
+                score = minimax(board_copy, depth + 1, True)
+                best_score = min(score, best_score)
+        return best_score
+
+
+
 
 def choose_random_goal(list_of_goals):
     """Return a random goal, and delete the goal from list of goals"""
@@ -357,85 +219,97 @@ def create_goals(board):
     return list_of_goals
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def check_if_goal_valid(goal, board):
     for b, r, c in goal:
         if board[b, r, c] != ' ':
             return False
     return True
 
+# def play_tic_tac_toe():
+#     def on_button_click(b, r, c):
+#         nonlocal player_turn, turn_count, list_of_goals, goal
+
+#         if board[b, r, c] == ' ':
+#             input_player_move(board, player_turn, (b, r, c))
+#             button_texts[b, r, c].set(player_turn)
+
+#             if check_for_wins(board) != 'None':
+#                 draw_board_label.config(text=draw_board(board))
+#                 messagebox.showinfo("Game Over", f'The winner is {check_for_wins(board)}')
+#                 root.destroy()
+
+#             player_turn = swap_player_turn(player_turn)
+#             turn_count += 1
+#             while not check_if_goal_valid(goal, board):
+#                 goal = choose_random_goal(list_of_goals)
+
+#             draw_board_label.config(text=draw_board(board))
+#             ai_move(board, goal, player_turn)
+#         while turn_count < 64 and check_for_wins(board) == 'None':
+#             # User's turn
+#             if player_turn == 'X':
+#                 root.update()
+#                 root.update_idletasks()
+#             # AI's turn
+#             else:
+#                 goal = choose_random_goal(list_of_goals)
+#                 while not check_if_goal_valid(goal, board, for_user=False):
+#                     goal = choose_random_goal(list_of_goals)
+#                 ai_move(board, player_turn)
+#                 draw_board_label.config(text=draw_board(board))
+
+
+#             player_turn = swap_player_turn(player_turn)
+#             turn_count += 1
+
+#             if check_for_wins(board) != 'None':
+#                 draw_board_label.config(text=draw_board(board))
+#                 messagebox.showinfo("Game Over", f'The winner is {check_for_wins(board)}')
+#             else:
+#                 messagebox.showinfo("Game Over", "It's a draw!")
+
+#             root.destroy()
+
+    
+
+#     root = tk.Tk()
+#     root.title("3D Tic Tac Toe")
+
+#     board = np.full((4, 4, 4), ' ')
+#     player_turn = 'X'
+#     turn_count = 0
+#     list_of_goals = create_goals(board)
+#     goal = choose_random_goal(list_of_goals)
+
+#     button_texts = np.empty((4, 4, 4), dtype=tk.StringVar)
+
+#     for r in range(4):
+#         for c in range(4):
+#             for b in range(4):
+#                 button_texts[b, r, c] = tk.StringVar()
+#                 button_texts[b, r, c].set(board[b, r, c])
+#                 button = tk.Button(root, textvariable=button_texts[b, r, c], font=("Helvetica", 16), width=4, height=2,
+#                                 command=lambda b=b, r=r, c=c: on_button_click(b, r, c))
+#                 button.grid(row=r, column=c + b * 5)
+
+
+#     draw_board_label = tk.Label(root, text=draw_board(board), font=("Helvetica", 12))
+#     draw_board_label.grid(row=4, column=0, columnspan=20)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def play_tic_tac_toe():
-    def on_button_click(b, r, c):
-        nonlocal player_turn, turn_count, list_of_goals, goal
-
-        if board[b, r, c] == ' ':
-            input_player_move(board, player_turn, (b, r, c))
-            button_texts[b, r, c].set(player_turn)
-
-            if check_for_wins(board) != 'None':
-                draw_board_label.config(text=draw_board(board))
-                messagebox.showinfo("Game Over", f'The winner is {check_for_wins(board)}')
-                root.destroy()
-
-            player_turn = swap_player_turn(player_turn)
-            turn_count += 1
-            while not check_if_goal_valid(goal, board):
-                goal = choose_random_goal(list_of_goals)
-
-            draw_board_label.config(text=draw_board(board))
-            ai_move(board, goal, player_turn)
-            player_turn = swap_player_turn(player_turn)
-            turn_count += 1
-
-            if check_for_wins(board) != 'None':
-                draw_board_label.config(text=draw_board(board))
-                messagebox.showinfo("Game Over", f'The winner is {check_for_wins(board)}')
-                root.destroy()
-
     root = tk.Tk()
     root.title("3D Tic Tac Toe")
 
@@ -447,35 +321,71 @@ def play_tic_tac_toe():
 
     button_texts = np.empty((4, 4, 4), dtype=tk.StringVar)
 
-    for b in range(4):
-        for r in range(4):
-            for c in range(4):
+    for r in range(4):
+        for c in range(4):
+            for b in range(4):
                 button_texts[b, r, c] = tk.StringVar()
                 button_texts[b, r, c].set(board[b, r, c])
                 button = tk.Button(root, textvariable=button_texts[b, r, c], font=("Helvetica", 16), width=4, height=2,
-                                   command=lambda b=b, r=r, c=c: on_button_click(b, r, c))
+                                   state=tk.DISABLED)  # Disable buttons
                 button.grid(row=r, column=c + b * 5)
 
     draw_board_label = tk.Label(root, text=draw_board(board), font=("Helvetica", 12))
     draw_board_label.grid(row=4, column=0, columnspan=20)
 
+    # Auto-play loop
+    while check_for_wins(board) == 'None' and turn_count < 64:  # Continue until someone wins or it's a draw
+        root.update_idletasks()
+        root.update()
 
-    # def easy():تتتتتتتتتتتتت
+        # Player X move (user input)
+        if player_turn == 'X':
+            # Add your existing user input code here
+            pass
 
-    #     pass
+        # Player O move (AI)
+        elif player_turn == 'O':
+            ai_move(board, goal, player_turn)
+            player_turn = swap_player_turn(player_turn)
+            turn_count += 1
 
-    # def medium():
-    #     pass
+            # Update the GUI
+            draw_board_label.config(text=draw_board(board))
+            root.update_idletasks()
+            root.update()
 
-    # def difficult():
-    #     pass
+            # Delay for better visualization (you can adjust the sleep time)
+            time.sleep(1)
 
-    # btn1 = tk.Button(root, text="Easy", command=easy,width=15, height=2, font=( 50), fg="black", padx=5, pady=5)
-    # btn1.pack()
-    # btn2 = tk.Button(root, text="Medium", command=medium, width=15, height=2, font=(50), bg="black", fg="white", padx=5, pady=5)
-    # btn2.pack()
-    # btn3 = tk.Button(root, text="Defficult", command=difficult, width=15, height=2, font=( 50), bg="black", fg="white", padx=5, pady=5)
-    # btn3.pack()
+    # Game Over
+    if check_for_wins(board) != 'None':
+        messagebox.showinfo("Game Over", f'The winner is {check_for_wins(board)}')
+    else:
+        messagebox.showinfo("Game Over", "It's a draw!")
+
+    root.destroy()
+
+# Call the play_tic_tac_toe function to start the game
+# play_tic_tac_toe()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
