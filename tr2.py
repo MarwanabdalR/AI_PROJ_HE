@@ -294,7 +294,7 @@ class TicTacToeGUI:
         if self.board.is_win('x') or self.board.is_win('O'):
             winner = 'Player X' if self.board.is_win('x') else 'Player O'
             messagebox.showinfo("Game Over", f"{winner} wins!")
-            self.board.reset_board()
+            self.start_game()
             self.update_status()
             return True
 
