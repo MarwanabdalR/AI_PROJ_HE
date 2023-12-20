@@ -124,15 +124,15 @@ class Board:
 
         if self.AI_player == 'x':
             if x_wins > 0:
-                evaluation += 1000  # Winning move for AI
+                evaluation += 100 # Winning move for AI
             if o_wins > 0:
-                evaluation -= 1000  # Block opponent from winning
+                evaluation -= 100 # Block opponent from winning
 
         elif self.AI_player == 'O':
             if o_wins > 0:
-                evaluation += 1000  # Winning move for AI
+                evaluation += 100 # Winning move for AI
             if x_wins > 0:
-                evaluation -= 1000  # Block opponent from winning
+                evaluation -= 100 # Block opponent from winning
 
         evaluation += 10 * empty_spaces  # Encourage filling layers with more empty spaces
 
@@ -243,6 +243,12 @@ class TicTacToeGUI:
 
     def make_move(self, layer, row, col):
         if self.board.get_value(layer, row, col) == '':
+            # Check if the human player is close to winning, and block if necessary
+            if self.check_close_to_winning('x'):
+                messagebox.showinfo("Block Move", "Blocking human player from winning!")
+                return
+
+            # Make the move for the human player
             self.board.set_value(layer, row, col)
             self.buttons[layer][row][col].config(text=self.board.current_player)
             self.board.turn()
@@ -254,6 +260,13 @@ class TicTacToeGUI:
 
             # If it's the AI player's turn, let it make a move
             if self.board.current_player == self.board.AI_player:
+                # Check if the AI player is close to winning, and complete the chance if necessary
+                if self.check_close_to_winning(self.board.AI_player):
+                    messagebox.showinfo("AI Move", "Completing AI player's chance to win!")
+                    self.check_game_over()
+                    return
+
+                # Make the move for the AI player
                 best_move = self.get_best_move()
                 if best_move:
                     layer, row, col = best_move
@@ -265,11 +278,25 @@ class TicTacToeGUI:
                     # Check for a win or draw after the AI player's move
                     self.check_game_over()
 
+    def check_close_to_winning(self, player):
+        # Check if the given player is close to winning on the next move
+        for layer in range(4):
+            for row in range(4):
+                for col in range(4):
+                    if self.board.get_value(layer, row, col) == '':
+                        # Simulate the move and check if it leads to a win
+                        self.board.set_value(layer, row, col)
+                        if self.board.is_win(player):
+                            self.board.undo_move(layer, row, col)
+                            return True
+                        self.board.undo_move(layer, row, col)
+
+        return False
     def check_game_over(self):
         if self.board.is_win('x') or self.board.is_win('O'):
             winner = 'Player X' if self.board.is_win('x') else 'Player O'
             messagebox.showinfo("Game Over", f"{winner} wins!")
-            self.board.reset_board()
+            self.start_game()
             self.update_status()
             return True
 
