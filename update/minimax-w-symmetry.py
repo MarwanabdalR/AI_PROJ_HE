@@ -124,15 +124,15 @@ class Board:
                     
     def evaluate_line(line):
         # Evaluate a line (row, column, or depth) for the heuristic
-        if line.count('x') == 4:
+        if line.count('X') == 4:
             return 100  # Maximizer (PLAYER_X) wins
         elif line.count('O') == 4:
             return -100  # Minimizer (PLAYER_O) wins
-        elif line.count('x') == 3 and line.count('') == 1:
+        elif line.count('X') == 3 and line.count('') == 1:
             return 10  # Maximizer has three in a row with one empty cell
         elif line.count('O') == 3 and line.count('') == 1:
             return -10  # Minimizer has three in a row with one empty cell
-        elif line.count('x') == 2 and line.count('') == 2:
+        elif line.count('X') == 2 and line.count('') == 2:
             return 5  # Maximizer has two in a row with two empty cells
         elif line.count('O') == 2 and line.count('') == 2:
             return -5  # Minimizer has two in a row with two empty cells
@@ -261,10 +261,10 @@ class TicTacToeGUI:
         self.set_players("x")
         self.update_status()
 
-    def get_best_move(self, max_time=5):
+    def get_best_move(self, max_time=2):
         best_move = None
         best_eval = -math.inf
-        max_depth = 1
+        max_depth = 2
         start_time = time.time()
 
         while time.time() - start_time < max_time:
@@ -286,7 +286,7 @@ class TicTacToeGUI:
                 if self.board.is_win('x'):
                     eval = -100  # Heavily penalize blocking the opponent's win
                 else:
-                    eval = -self.board.minimax_with_heuristic(max_depth, False)
+                    eval = -self.board.minimax_with_heuristic(max_depth-1, False)
 
                 self.board.undo_move(layer, row, col)
 
@@ -294,9 +294,7 @@ class TicTacToeGUI:
                     best_eval = eval
                     best_move = move
 
-            max_depth += 1
-
-        return best_move
+            #max_depth += 1
 
         return best_move
 

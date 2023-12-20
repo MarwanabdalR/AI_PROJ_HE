@@ -221,10 +221,10 @@ class TicTacToeGUI:
         self.set_players("x")
         self.update_status()
 
-    def get_best_move(self, max_time=5):
+    def get_best_move(self, max_time=2):
         best_move = None
         best_eval = -math.inf
-        max_depth = 1
+        max_depth = 2
         start_time = time.time()
 
         while time.time() - start_time < max_time:
@@ -241,7 +241,7 @@ class TicTacToeGUI:
             for move in available_moves:
                 layer, row, col = move
                 self.board.set_value(layer, row, col)
-                eval = self.board.minimax_with_heuristic(max_depth, False)
+                eval = self.board.minimax_with_heuristic(max_depth-1, False)
                 self.board.undo_move(layer, row, col)
 
                 if eval > best_eval:
