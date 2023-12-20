@@ -121,33 +121,60 @@ class Board:
             for row in range(4):
                 for column in range(4):
                     self.board[layer][row][column] = ''
+                    
+    def evaluate_line(line):
+        # Evaluate a line (row, column, or depth) for the heuristic
+        if line.count('x') == 4:
+            return 100  # Maximizer (PLAYER_X) wins
+        elif line.count('O') == 4:
+            return -100  # Minimizer (PLAYER_O) wins
+        elif line.count('x') == 3 and line.count('') == 1:
+            return 10  # Maximizer has three in a row with one empty cell
+        elif line.count('O') == 3 and line.count('') == 1:
+            return -10  # Minimizer has three in a row with one empty cell
+        elif line.count('x') == 2 and line.count('') == 2:
+            return 5  # Maximizer has two in a row with two empty cells
+        elif line.count('O') == 2 and line.count('') == 2:
+            return -5  # Minimizer has two in a row with two empty cells
+        else:
+            return 0  # No winner in the line
 
     def heuristic_evaluation(self):
-        x_wins = sum(self.is_win('x') for layer in self.board)
-        o_wins = sum(self.is_win('O') for layer in self.board)
-        empty_spaces = sum(row.count('') for layer in self.board for row in layer)
+    # Symmetric heuristic evaluation function
+        score = 0
 
-        # Enhanced heuristic:
-        # - Prioritize winning immediately
-        # - Penalize the opponent for potential winning moves
-        # - Encourage filling layers with more empty spaces
-        evaluation = 0
+        # Check rows, columns, and depth
+        for i in range(4):
+            for j in range(4):
+                # Rows and columns
+                score += Board.evaluate_line([self.board[i][j][k] for k in range(4)])
 
-        if self.AI_player == 'x':
-            if x_wins > 0:
-                evaluation += 1000  # Winning move for AI
-            if o_wins > 0:
-                evaluation -= 1000  # Block opponent from winning
+                # Depth
+                score += Board.evaluate_line([self.board[i][k][j] for k in range(4)])
 
-        elif self.AI_player == 'O':
-            if o_wins > 0:
-                evaluation += 1000  # Winning move for AI
-            if x_wins > 0:
-                evaluation -= 1000  # Block opponent from winning
+        # Check diagonals in each layer
+        for i in range(4):
+            # Main diagonals
+            score += Board.evaluate_line([self.board[i][j][j] for j in range(4)])
+            score += Board.evaluate_line([self.board[i][j][3 - j] for j in range(4)])
 
-        evaluation += 10 * empty_spaces  # Encourage filling layers with more empty spaces
+            # Side diagonals
+            score += Board.evaluate_line([self.board[i][3 - j][j] for j in range(4)])
+            score += Board.evaluate_line([self.board[i][3 - j][3 - j] for j in range(4)])
 
-        return evaluation
+        # Check along the depth dimension
+        for j in range(4):
+            for k in range(4):
+                # Diagonals in depth
+                score += Board.evaluate_line([self.board[i][j][k] for i in range(4)])
+
+                # Side diagonals in depth
+                score += Board.evaluate_line([self.board[3 - i][j][k] for i in range(4)])
+
+        return score
+    
+    
+
 
     def minimax_with_heuristic(self, depth, maximizing_player):
         if depth == 0 or self.is_win('x') or self.is_win('O') or self.is_full():
@@ -254,7 +281,13 @@ class TicTacToeGUI:
             for move in available_moves:
                 layer, row, col = move
                 self.board.set_value(layer, row, col)
-                eval = self.board.minimax_with_heuristic(max_depth, False)
+
+                # Check if the opponent is about to win, and block that move
+                if self.board.is_win('x'):
+                    eval = -100  # Heavily penalize blocking the opponent's win
+                else:
+                    eval = -self.board.minimax_with_heuristic(max_depth, False)
+
                 self.board.undo_move(layer, row, col)
 
                 if eval > best_eval:
@@ -262,6 +295,8 @@ class TicTacToeGUI:
                     best_move = move
 
             max_depth += 1
+
+        return best_move
 
         return best_move
 
